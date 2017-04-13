@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body>
+	<center>
+		<h2>Think Learn Share</h2>
+		<div id="questionAnswerText">
+			<div id="add">
+				<input type="button" name="AddQuestion" id="AddQuestion" value="AddQuestion" onclick="show('addQuestion');hide('AddQuestion')">
+			</div>
+			<div id="addingText"></div>
+			<div id="addQuestion" style="visibility: hidden">
+				Question : <input type="text" name="question" id="question">
+				<input type="button" value="submit" id="submit" name="submit" onclick="addQuestion('question','addQuestion');hide('addQuestion')">
+			</div>
+
+			<input type="button" name="yes" value="add an Answer" style="visibility: hidden" id="yes"	onclick="ansArray();show('addAnswerText');hide('yes');hide('no')">
+			<input type="button" name="no" value="no" id="no" style="visibility: hidden" onclick="noAnswer();getValues();show('anotherQuestion');hide('no');hide('yes')">
+
+			<div id="addAnswerText" style="visibility: hidden">
+				Answer : <input type="text" name="answerText" id="answerText">
+				<input type="button" value="Submit another Answer" 	name="submitAnswer" id="submitAnswer" onclick="addAnswer('answerText','addAnswerText')">
+			    <input type="button" value="Submit" name="submit" id="submit" onclick="addAnswer('answerText','addAnswerText');getValues();hide('addAnswerText');show('anotherQuestion')">
+			</div>
+
+			<div id="anotherQuestion" style="visibility: hidden">
+				<input type="button" id="addQuestion" value="add another Question" onclick="show('addQuestion');hideDiv();hide('anotherQuestion')">
+				<input type="button" id="no more" value="no" onclick="hide('anotherQuestion');validate()">
+			</div>
+		</div>
+	</center>
+</body>
+
+<script>
+
+	var QuestionsList = new Array();
+	var count = 0;
+	function hideDiv() {
+		document.getElementById("question").value = "";
+	}
+
+	function addQuestion(textId, divId) {
+		question = document.getElementById(textId).value;
+		if (question != "") {
+			document.getElementById("addingText").innerHTML += "<br>"+ "Question : " + question;
+			show('yes');
+			show('no');
+		}
+	}
+
+	function ansArray() {
+		var ans = "";
+		answerArray = ans + count;
+		answerArray = new Array();
+	}
+
+	function addAnswer(textId, divId) {
+		answer = document.getElementById(textId).value;
+		if (answer != "") {
+			document.getElementById("addingText").innerHTML += "<br>"+ "Given Answer : " + answer;
+			document.getElementById(textId).value = "";
+			answerArray.push({Answer:answer});
+		}
+	}
+	
+	function noAnswer() {
+		answerArray = new Array();
+	}
+
+	function hide(hideData) {
+		document.getElementById(hideData).style.visibility = "hidden";
+	}
+
+	function show(displayData) {
+		document.getElementById(displayData).style.visibility = "visible";
+	}
+
+	function getValues() {
+		questionObject = {
+			"Given Question" : question,
+			"Given Answers" : answerArray
+		};
+
+		QuestionsList.push(questionObject);
+		console.log(QuestionsList);
+	}
+
+	function validate() {
+		var xmlHttp = new XMLHttpRequest();
+		jsonData = JSON.stringify(QuestionsList);
+		xmlHttp.onreadystatechange = function() {
+			if (xmlHttp.readystate === 4 && xmlHttp.status === 200)
+				document.getElementById("addingText").innerHTML = xmlHttp.responseText;
+			document.getElementById("addingText").innerHTML = xmlHttp.responseText;
+		};
+
+		var string = " ";
+		xmlHttp.open("POST", "/mounika?string=" + jsonData);
+		//xmlHttp.open("POST", "/mounika?string=" + QuestionsList);
+		xmlHttp.send();
+	}
+</script>
+</html>

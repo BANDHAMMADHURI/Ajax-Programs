@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Registration form</title>
+</head>
+<body>
+	<center>
+		<h2>
+			<i>Registration Form</i>
+		</h2>
+		<br>
+
+		<div id="ajaxForm">
+			<lable>Name : </lable>
+			<input type="text" name="name" id="Name"
+				onkeypress="return (event.charCode >= 97 && event.charCode <= 122)||(event.charCode >= 65 && event.charCode <= 90)"
+				onchange="nameCheck()" autofocus> <br />
+			<lable>Birth Year : </lable>
+			<input type="text" name="birthYear" id="BirthYear"
+				onChange="birthYearCheck()"
+				onkeypress="return event.charCode >= 48 && event.charCode <= 57 "
+				autofucus> <br />
+			<lable>Gender : </lable>
+			<input type="text" name="Gender" id="Gender"
+				onkeypress="return (event.charCode >= 97 && event.charCode <= 122)||(event.charCode >= 65 && event.charCode <= 90)"
+				onchange="genderCheck()" autofocus> <br />
+			<lable>City : </lable>
+			<input type="text" name="city" id="City"
+				onkeypress="return (event.charCode >= 97 && event.charCode <= 122)||(event.charCode >= 65 && event.charCode <= 90)"
+				onchange="cityCheck()" autofocus> <br />
+			<lable>Contact : </lable>
+			<input type="text" name="contact" id="Contact"
+				onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+				onchange="contactCheck()" autofocus> <br />
+			<lable>State : </lable>
+			<input type="text" name="state" id="State"
+				onkeypress="return (event.charCode >= 97 && event.charCode <= 122)||(event.charCode >= 65 && event.charCode <= 90)"
+				autofocus> <br /> <input type="button" name="submit"
+				id="submit" value="Submit" onclick="validate()">
+		</div>
+	</center>
+</body>
+
+<script language="javascript" type="text/javascript">
+	function nameCheck() {
+		name = document.getElementById("Name").value.toUpperCase();
+		if (name.length == 0)
+			alert("enter the name");
+	}
+	
+	function birthYearCheck() {
+		birthYear = document.getElementById("BirthYear").value;
+		if (birthYear.length != 4) {
+			alert("enter valid year ..");
+		}
+	}
+	function genderCheck() {
+		gender = document.getElementById("Gender").value.toLowerCase();
+
+		if (!((gender == "female") || (gender == "male")
+				|| (gender == "lesbian") || (gender == "gay")))
+			alert("gender not recognized");
+	}
+	function cityCheck() {
+		city = document.getElementById("City").value;
+		if (city.length == 0)
+			alert("enter the city");
+		
+	}
+
+	function contactCheck() {
+		contact = document.getElementById("Contact").value;
+		if (contact.length != 10) {
+			alert("contact should have 10 digits ..");
+		}
+	}
+	function validate() {
+		var state, data, jsonData;
+		state = document.getElementById("State").value;
+		data = {
+			
+				"BirthYear" : birthYear,
+				"Gender" : gender,
+				"City" : city,
+				"Contact" : contact,
+				 "State":state
+			
+		};
+		jsonData = JSON.stringify(data);
+		xmlHttp = new XMLHttpRequest();
+		var stringParameter = " ";
+		xmlHttp.open("POST", "/ajaxdemo?stringParameter="+ jsonData);
+		xmlHttp.send();
+		xmlHttp.onreadystatechange = function() {
+
+			if (xmlHttp.status == 401)
+				document.getElementById("ajaxForm").innerHTML = xmlHttp.responseText+ "\nunauthorized";
+			
+			if (xmlHttp.status == 403)
+				document.getElementById("ajaxForm").innerHTML = xmlHttp.responseText+"\nforbidden-The server understood the request but refuses to authorize it.";
+			
+			if (xmlHttp.status == 404)
+				document.getElementById("ajaxForm").innerHTML = xmlHttp.responseText+ "\nthe page not found";
+			
+			if (xmlHttp.status == 500)
+				document.getElementById("ajaxForm").innerHTML = /* xmlHttp.responseText+ */ "\ninternal server error-The server encountered an unexpected condition that prevented it from fulfilling the request.";
+			
+			if ((xmlHttp.readyState == 4) && (xmlHttp.status == 200)) {
+				document.getElementById("ajaxForm").innerHTML = xmlHttp.responseText;
+			}
+
+		};
+		
+
+	}
+	
+</script>
+</html>

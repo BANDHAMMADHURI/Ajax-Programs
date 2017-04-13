@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Ajax with Jquery</title>
+</head>
+<body>
+	<script type="text/javascript"
+		src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<div id="div">
+	<br> Name :
+	<input type="text" name="name" id="name"><br>
+	 password :
+	<input type="password" name="password" id="password" /><br>
+	 Age :
+	<input type="text" name="age" id="age"
+		onkeypress="return event.charCode >= 48 && event.charCode <= 57" /><br>
+	Sex :
+	<input type="text" name="sex" id="sex" /><br>
+	<input type="button" value="Register" id="submit" />
+   </div>
+</body>
+
+
+<script>
+	var data;
+
+	$("#submit").click(function() {
+		name = $('#name').val();
+		age = $('#age').val();
+		sex = $('#sex').val();
+		data = {
+			"name" : name,
+			"age" : age,
+			"sex" : sex
+		};
+		//console.log('data got ', data);
+
+		$.ajax({
+			type : 'GET',
+			url : "/ajaxtest",
+			data : data,
+			success : function(data) {
+				var result = data;
+				$('#result').attr("value", result);
+				console.log('data got ', data);
+				document.getElementById("div").innerHTML=data;
+			}
+		});
+	});
+</script>
+</html>
+
+
+
+
+
+
